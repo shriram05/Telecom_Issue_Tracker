@@ -2,21 +2,6 @@ class Customer:
     def __init__(self, db):
         self.db = db
     
-    def create_table(self):
-        """Create customers table"""
-        query = """
-        CREATE TABLE IF NOT EXISTS customers (
-            customer_id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(100) NOT NULL,
-            phone VARCHAR(15) NOT NULL UNIQUE,
-            email VARCHAR(100),
-            address VARCHAR(255) NOT NULL,
-            registration_date DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-        """
-        self.db.execute_query(query)
-        self.db.commit()
-    
     def register(self, name, phone, email, address):
         """Register a new customer"""
         query = """
@@ -40,22 +25,6 @@ class Customer:
 class Technician:
     def __init__(self, db):
         self.db = db
-    
-    def create_table(self):
-        """Create technicians table"""
-        query = """
-        CREATE TABLE IF NOT EXISTS technicians (
-            tech_id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(100) NOT NULL,
-            phone VARCHAR(15) NOT NULL UNIQUE,
-            email VARCHAR(100),
-            location VARCHAR(100) NOT NULL,
-            expertise VARCHAR(100) NOT NULL,
-            availability BOOLEAN DEFAULT TRUE
-        )
-        """
-        self.db.execute_query(query)
-        self.db.commit()
     
     def register(self, name, phone, email, location, expertise):
         """Register a new technician"""
@@ -94,24 +63,6 @@ class Technician:
 class Complaint:
     def __init__(self, db):
         self.db = db
-    
-    def create_table(self):
-        """Create complaints table"""
-        query = """
-        CREATE TABLE IF NOT EXISTS complaints (
-            complaint_id INT AUTO_INCREMENT PRIMARY KEY,
-            customer_id INT NOT NULL,
-            issue_type ENUM('Call Drop', 'Slow Internet', 'No Signal', 'Other') NOT NULL,
-            description TEXT NOT NULL,
-            location VARCHAR(100) NOT NULL,
-            status ENUM('Open', 'Assigned', 'In Progress', 'Resolved', 'Closed') DEFAULT 'Open',
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
-        )
-        """
-        self.db.execute_query(query)
-        self.db.commit()
     
     def log(self, customer_id, issue_type, description, location):
         """Log a new complaint"""
@@ -203,23 +154,6 @@ class Complaint:
 class Assignment:
     def __init__(self, db):
         self.db = db
-    
-    def create_table(self):
-        """Create assignments table"""
-        query = """
-        CREATE TABLE IF NOT EXISTS assignments (
-            assignment_id INT AUTO_INCREMENT PRIMARY KEY,
-            complaint_id INT NOT NULL,
-            tech_id INT NOT NULL,
-            assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            resolution_notes TEXT,
-            resolved_at DATETIME,
-            FOREIGN KEY (complaint_id) REFERENCES complaints(complaint_id),
-            FOREIGN KEY (tech_id) REFERENCES technicians(tech_id)
-        )
-        """
-        self.db.execute_query(query)
-        self.db.commit()
     
     def create(self, complaint_id, tech_id):
         """Create a new assignment"""

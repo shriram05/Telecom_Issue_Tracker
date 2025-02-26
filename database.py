@@ -12,7 +12,7 @@ class Database:
             )
             self.cursor = self.conn.cursor()
             
-            # Create database if it doesn't exist
+            # Creating database if it doesn't exist
             self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database}")
             self.cursor.execute(f"USE {database}")
             
@@ -22,7 +22,6 @@ class Database:
             exit(1)
     
     def execute_query(self, query, params=None):
-        """Execute a query with optional parameters"""
         try:
             if params:
                 self.cursor.execute(query, params)
@@ -34,14 +33,12 @@ class Database:
             return None
     
     def fetch_all(self, query, params=None):
-        """Execute a query and fetch all results"""
         cursor = self.execute_query(query, params)
         if cursor:
             return cursor.fetchall()
         return []
     
     def fetch_one(self, query, params=None):
-        """Execute a query and fetch one result"""
         cursor = self.execute_query(query, params)
         if cursor:
             return cursor.fetchone()
